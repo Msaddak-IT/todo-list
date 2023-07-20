@@ -51,8 +51,8 @@ export class TodoController {
     //     },
     //   },
     // })
-    @requestBody() todo: Todo,
     // todo: Omit<Todo, 'id'>,
+    @requestBody() todo: Todo,
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
   ): Promise<Todo> {
