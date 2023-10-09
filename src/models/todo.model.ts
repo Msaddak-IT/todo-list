@@ -25,14 +25,23 @@ export class Todo extends Entity {
     type: 'boolean',
   })
   isComplete?: boolean;
-  //change in the next prop
+
+
   @property({
-    type: 'string',
+    type: 'Date',
+    default: () => new Date(new Date().getTime())
   })
-  creatorId: string
+  createdAt: Date
 
   @belongsTo(() => TodoList)
-  todoListId: number;
+  todoListId: string;
+  // @belongsTo(() => TodoList)
+  // todoListId: number;
+
+  @property({
+    type: 'number',
+  })
+  userId?: string;
 
   constructor(data?: Partial<Todo>) {
     super(data);

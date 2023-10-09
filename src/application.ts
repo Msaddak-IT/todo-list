@@ -1,12 +1,12 @@
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
 
+import {RepositoryMixin} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
@@ -14,10 +14,13 @@ import {MySequence} from './sequence';
 import {AuthenticationComponent} from '@loopback/authentication';
 import {
   JWTAuthenticationComponent,
-  SECURITY_SCHEME_SPEC,
   UserServiceBindings,
 } from '@loopback/authentication-jwt';
+import {BcryptHasher} from './Services';
+import {CustomUserService} from './Services/customUser.service';
 import {DbDataSource} from './datasources';
+import {PasswordHasherBindings} from './keys';
+import {MatchController} from './controllers';
 
 
 export {ApplicationConfig};
@@ -58,6 +61,16 @@ export class TodoListApplication extends BootMixin(
     this.component(JWTAuthenticationComponent);
     //Datasource binding
     this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME)
-    
+
+
+    this.setUpBindings();
+
+    this.controller(MatchController)
+
+  }
+  setUpBindings(): void {
+    this.bind('service.customUserService').toClass(CustomUserService);
+    this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher)
+    this.bind(PasswordHasherBindings.ROUNDS).to(10)
   }
 }

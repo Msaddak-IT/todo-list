@@ -1,9 +1,9 @@
-import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, HasManyRepositoryFactory, HasOneRepositoryFactory} from '@loopback/repository';
+import {Getter, inject} from '@loopback/core';
+import {DefaultCrudRepository, HasManyRepositoryFactory, HasOneRepositoryFactory, repository} from '@loopback/repository';
 import {DbDataSource} from '../datasources';
-import {TodoList, TodoListRelations, Todo, TodoListImage} from '../models';
-import {TodoRepository} from './todo.repository';
+import {Todo, TodoList, TodoListImage, TodoListRelations} from '../models';
 import {TodoListImageRepository} from './todo-list-image.repository';
+import {TodoRepository} from './todo.repository';
 
 export class TodoListRepository extends DefaultCrudRepository<
   TodoList,
@@ -18,17 +18,18 @@ export class TodoListRepository extends DefaultCrudRepository<
   public readonly todoListImage: HasOneRepositoryFactory<TodoListImage, typeof TodoList.prototype.id>;
 
   constructor(
-    @inject('datasources.db') dataSource: DbDataSource, @repository.getter('TodoRepository') protected todoRepositoryGetter: Getter<TodoRepository>, @repository.getter('TodoListImageRepository') protected todoListImageRepositoryGetter: Getter<TodoListImageRepository>,
+    @inject('datasources.db') dataSource: DbDataSource,
+    @repository.getter('TodoRepository') protected todoRepositoryGetter: Getter<TodoRepository>, @repository.getter('TodoListImageRepository') protected todoListImageRepositoryGetter: Getter<TodoListImageRepository>,
   ) {
     super(TodoList, dataSource);
     this.todoListImage = this.createHasOneRepositoryFactoryFor('todoListImage', todoListImageRepositoryGetter);
     this.registerInclusionResolver('todoListImage', this.todoListImage.inclusionResolver);
     this.image = this.createHasOneRepositoryFactoryFor('image', todoListImageRepositoryGetter);
     this.registerInclusionResolver('image', this.image.inclusionResolver);
-    this.todos = this.createHasManyRepositoryFactoryFor('todos', todoRepositoryGetter,);
-    this.registerInclusionResolver('todos', this.todos.inclusionResolver);
+    // this.todos = this.createHasManyRepositoryFactoryFor('todos', todoRepositoryGetter,);
+    // this.registerInclusionResolver('todos', this.todos.inclusionResolver);
   }
-  public findByTitle(title:string){
-    return this.findOne({where:{title}})
+  public findByTitle(title: string) {
+    return this.findOne({where: {title}})
   }
 }

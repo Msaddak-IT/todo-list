@@ -1,4 +1,4 @@
-import {authenticate} from '@loopback/authentication';
+//import {authenticate} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {
   Count,
@@ -23,12 +23,11 @@ import {
 } from '@loopback/rest';
 import {Todo} from '../models';
 import {TodoRepository} from '../repositories';
-
-import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
-
+import {authenticate} from '@loopback/authentication';
 
 @authenticate('jwt')
 export class TodoController {
+  private readonly DEFAULT_LIMIT = 10
   constructor(
     @repository(TodoRepository)
     public todoRepository: TodoRepository,
@@ -41,22 +40,19 @@ export class TodoController {
     content: {'application/json': {schema: getModelSchemaRef(Todo)}},
   })
   async create(
-    // @requestBody({
-    //   content: {
-    //     'application/json': {
-    //       schema: getModelSchemaRef(Todo, {
-    //         title: 'NewTodo',
-    //         exclude: ['id'],
-    //       }),
-    //     },
-    //   },
-    // })
-    // todo: Omit<Todo, 'id'>,
-    @requestBody() todo: Todo,
-    @inject(SecurityBindings.USER)
-    currentUserProfile: UserProfile,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Todo, {
+            title: 'NewTodo',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    todo: Omit<Todo, 'id'>,
   ): Promise<Todo> {
-    todo.creatorId = currentUserProfile[securityId]
+
 
     return this.todoRepository.create(todo);
   }
@@ -160,5 +156,22 @@ export class TodoController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.todoRepository.deleteById(id);
+  }
+  //pagiantion
+  @get('/todospages')
+  async getTodos(
+    @param.query.number('page') page: number,
+    @param.query.number('limit') limit: number,
+  ): Promise<Todo[]> {
+    //take the default limit if there's none.
+    if (!limit || limit <= 0) {
+      limit = this.DEFAULT_LIMIT
+    }
+    const offset = (page - 1) * limit;
+    const todos: Todo[] = await this.todoRepository.find({
+      skip: offset,
+      limit
+    });
+    return todos
   }
 }
