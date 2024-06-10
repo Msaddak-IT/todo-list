@@ -112,6 +112,7 @@ export class MatchController {
 
   }
 
+
   @post('/PostMatchesByPinging')
   async PostMatchesByPinging() {
     const date = new Date().toISOString().slice(0, 10);
@@ -145,8 +146,10 @@ export class MatchController {
     });
     await this.matchRepository.createAll(matches);
     console.log("matches have been pushed to the database successfully !!! ");
-
-
+  }
+  @get('/getAllMatches')
+  async getAllMatchesFromDatabase(): Promise<Match[]> {
+    return this.matchRepository.find()
   }
 }
 
