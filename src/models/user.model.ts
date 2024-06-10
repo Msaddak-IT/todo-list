@@ -61,6 +61,7 @@ export class User extends Entity {
   }
 }
 
+
 export interface UserRelations {
   // describe navigational properties here
 }

@@ -1,5 +1,4 @@
 import {Entity, belongsTo, model, property} from '@loopback/repository';
-import {TodoList} from './todo-list.model';
 
 @model()
 export class Todo extends Entity {
@@ -33,8 +32,7 @@ export class Todo extends Entity {
   })
   createdAt: Date
 
-  @belongsTo(() => TodoList)
-  todoListId: string;
+  
   // @belongsTo(() => TodoList)
   // todoListId: number;
 

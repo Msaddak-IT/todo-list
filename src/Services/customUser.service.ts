@@ -93,4 +93,15 @@ export class CustomUserService {
     });
     return token
   }
+  async addCoinsToUser(userEmail: string, coins: number): Promise<User | null> {
+    const filter = {where: {email: userEmail}};
+    const user: User | null = await this.userRepository.findOne(filter);
+    if (user) {
+      user.wallet = +coins
+      return user;
+    } else {
+      throw new Error("user not found")
+    }
+  }
 }
+

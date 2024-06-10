@@ -51,6 +51,7 @@
   "dependencies": {
     "@loopback/authentication": "^10.1.1",
     "@loopback/authentication-jwt": "^0.14.1",
+    "@loopback/authorization": "^0.14.3",
     "@loopback/boot": "^6.1.1",
     "@loopback/core": "^5.1.1",
     "@loopback/cron": "^0.11.3",
@@ -63,6 +64,7 @@
     "cron": "^2.4.1",
     "dotenv": "^16.3.1",
     "loopback-connector-mongodb": "^5.6.0",
+    "moment": "^2.29.4",
     "node-cron": "^3.0.2",
     "npm": "^9.8.1",
     "puppeteer": "^21.1.0",

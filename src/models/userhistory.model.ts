@@ -1,4 +1,4 @@
-import {Entity, model, property} from '@loopback/repository';
+import {model, property} from '@loopback/repository';
 import {User} from './user.model';
 
 @model()
@@ -6,25 +6,26 @@ export class Userhistory extends User {
   @property({
     type: 'object',
     required: true,
-    default:''
+    default: ''
   })
   description: {
-    fr:string
-    en:string};
+    fr: string
+    en: string
+  };
 
   @property({
     type: 'string',
     id: true,
     generated: true,
   })
-  idHistory?: string;
+  idHistory: string;
 
   @property({
     type: 'date',
     required: true,
     default: () => new Date(new Date().getTime())
   })
-  createdAt:Date;
+  updatedAt: Date;
 
 
   constructor(data?: Partial<Userhistory>) {

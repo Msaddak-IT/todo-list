@@ -16,11 +16,13 @@ import {
   JWTAuthenticationComponent,
   UserServiceBindings,
 } from '@loopback/authentication-jwt';
+import {CronComponent} from '@loopback/cron';
 import {BcryptHasher} from './Services';
 import {CustomUserService} from './Services/customUser.service';
+import {MatchController} from './controllers';
 import {DbDataSource} from './datasources';
 import {PasswordHasherBindings} from './keys';
-import {MatchController} from './controllers';
+
 
 
 export {ApplicationConfig};
@@ -60,7 +62,9 @@ export class TodoListApplication extends BootMixin(
     //jwt component
     this.component(JWTAuthenticationComponent);
     //Datasource binding
-    this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME)
+    this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME);
+    // this is the binding of the CronJob which was imported from the @loopabck/cron.
+    this.component(CronComponent);
 
 
     this.setUpBindings();
@@ -70,6 +74,7 @@ export class TodoListApplication extends BootMixin(
   }
   setUpBindings(): void {
     this.bind('service.customUserService').toClass(CustomUserService);
+    
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher)
     this.bind(PasswordHasherBindings.ROUNDS).to(10)
   }

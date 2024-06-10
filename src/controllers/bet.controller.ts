@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -7,30 +8,27 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Bet} from '../models';
 import {BetRepository} from '../repositories';
-import {service} from '@loopback/core';
 import {BetService} from '../Services';
-import {request} from 'http';
-import {json} from 'stream/consumers';
 
 export class BetController {
   constructor(
     @repository(BetRepository)
-    public betRepository : BetRepository,
+    public betRepository: BetRepository,
     @service(BetService)
     public betService: BetService,
-  ) {}
+  ) { }
 
   @post('/bets')
   @response(200, {
@@ -43,12 +41,12 @@ export class BetController {
         'application/json': {
           schema: getModelSchemaRef(Bet, {
             title: 'NewBet',
-            exclude: ['id'],
+
           }),
         },
       },
     })
-    bet: Omit<Bet, 'id'>,
+    bet: Bet,
   ): Promise<Bet> {
     return this.betRepository.create(bet);
   }
@@ -154,25 +152,14 @@ export class BetController {
     await this.betRepository.deleteById(id);
   }
 
-  @post('/bets/addBet')
-  async placeBet(
-  @requestBody({
-    content:{
-      'application/json':{
-        schema:{
-          type:'object',
-          properties:{
-            userId:{type:'string'},
-            matchId:{type:'string'},
-            betType:{type:'string',enum:['Team1', 'Draw','Team2']},
-            coins:{type:'number'},
-          }
-        }
-      }
-    }
+
+  @post('/bets/addBet/')
+  @response(200, {
+    description: 'Bet Added to the match Successfully! '
   })
-  betData:{userId:string; matchId:string; betType:'Team1'|'Draw'|'Team2';coins:number},
-  ):Promise<Bet|Error>{
-return this.betService.placeBet(betData.userId,betData.matchId,betData.betType,betData.coins);
+  async addBet(@param.query.string('userId') userId: string, @param.query.string('matchId') matchId: string, @param.query.number('coins') coins: number, @param.query.number('betScoreTeam1') betScoreTeam1: number, @param.query.number('betScoreTeam2') betScoreTeam2: number): Promise<void> {
+    await this.betService.placeBet(userId, matchId, coins, betScoreTeam1, betScoreTeam2)
   }
+  
+
 }

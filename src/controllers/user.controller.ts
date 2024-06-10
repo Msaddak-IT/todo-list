@@ -12,9 +12,12 @@ import {inject} from '@loopback/core';
 import {model, property, repository} from '@loopback/repository';
 import {
   HttpErrors,
+  param,
   // getModelSchemaRef,
   post,
+  put,
   requestBody,
+  response,
   SchemaObject
 } from '@loopback/rest';
 import {SecurityBindings} from '@loopback/security';
@@ -200,32 +203,39 @@ export class UserController {
       return newUser
     }
   }
+  @put('/addcoins')
+  @response(204, {
+    description: 'coins have been added to the user',
+  })
+  async addcoins(@param.query.string("userId") userId: string, @param.query.number("coins") coins: number): Promise<User | null> {
+    return this.customUserService.addCoinsToUser(userId, coins) || null;
+  }
 }
-  // async signUp(
-  //   @requestBody({
-  //     content: {
-  //       'application/json': {
-  //         schema: CredentialsSchemaSignUp, // Use the credentials schema for validation
-  //       },
-  //     },
-  //   })
-  //   newUserRequest: NewUserRequest,
-  // ): Promise<SignUpResponse> {
-  //   const password = await hash(newUserRequest.password, await genSalt());
-  //   const savedUser = await this.userRepository.create(
-  //     _.omit(newUserRequest, 'password'),
-  //   );
-  //   const user = await this.userService.verifyCredentials(newUserRequest);
-  //   const userProfile = this.userService.convertToUserProfile(user);
-  //   const token = await this.generateTokenWithLifetime(userProfile, 8 * 60 * 60); // 8 hours lifetime
+// async signUp(
+//   @requestBody({
+//     content: {
+//       'application/json': {
+//         schema: CredentialsSchemaSignUp, // Use the credentials schema for validation
+//       },
+//     },
+//   })
+//   newUserRequest: NewUserRequest,
+// ): Promise<SignUpResponse> {
+//   const password = await hash(newUserRequest.password, await genSalt());
+//   const savedUser = await this.userRepository.create(
+//     _.omit(newUserRequest, 'password'),
+//   );
+//   const user = await this.userService.verifyCredentials(newUserRequest);
+//   const userProfile = this.userService.convertToUserProfile(user);
+//   const token = await this.generateTokenWithLifetime(userProfile, 8 * 60 * 60); // 8 hours lifetime
 
-  //   return {
-  //     email: savedUser.email,
-  //     firstName: savedUser.firstName,
-  //     lastName: savedUser.lastName,
-  //     token,
-  //   };
-  // }
+//   return {
+//     email: savedUser.email,
+//     firstName: savedUser.firstName,
+//     lastName: savedUser.lastName,
+//     token,
+//   };
+// }
 
 
 

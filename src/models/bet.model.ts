@@ -17,21 +17,27 @@ export class Bet extends Entity {
   user: User;
 
   @property({
+    type: 'string'
+  })
+  matchId: string
+
+  @property({
     type: 'number',
     require: true,
   })
   coins: number
 
   @property({
-    type: 'string',
+    type: 'number',
 
   })
-  betType: 'Team1' | 'Draw' | 'Team2';
+  betScoreTeam1:number;
 
   @property({
-    type: 'string'
+    type: 'number',
   })
-  matchId: string
+  betScoreTeam2:number;
+
 
   @property({
     type: 'number',

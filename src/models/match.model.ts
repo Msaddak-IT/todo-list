@@ -1,4 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Bet} from './bet.model';
 
 @model({settings: {strict: false}})
@@ -9,7 +9,6 @@ export class Match extends Entity {
     generated: true,
   })
   matchId?: string;
-
   @property({
     type: 'number'
   })
@@ -29,16 +28,19 @@ export class Match extends Entity {
 
   @property({
     type: 'string',
+    require: true,
   })
   team2: string;
 
   @property({
     type: 'number',
+    default: '0',
   })
   scoreTeam1: number;
 
   @property({
     type: 'number',
+    default: '0',
   })
   scoreTeam2: number;
 
@@ -48,20 +50,21 @@ export class Match extends Entity {
   location?: string;
 
   @property({
-    type: 'boolean'
+    type: 'boolean',
+    default: 'false'
   })
-  selected?: true
+  selected?: boolean;
 
   @property({
-    type: 'Date'
+    type: 'String'
   })
-  startsAt: Date
+  startsAt: String
 
   @property({
-    type:'boolean',
-    default:false
+    type: 'boolean',
+    default: false
   })
-  hasEnded:boolean
+  hasEnded: boolean
 
 
   @hasMany(() => Bet)

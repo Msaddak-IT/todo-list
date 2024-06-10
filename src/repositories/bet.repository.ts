@@ -32,11 +32,12 @@ export class BetRepository extends DefaultCrudRepository<
     return totalCoins
 
   }
-  async findTotalCoinsByMatchIdAndBetType(matchId: string, betType: any): Promise<number> {
+  async findTotalCoinsByMatchIdAndBetType(matchId: string, betScoreTeam1:number, betScoreTeam2:number): Promise<number> {
     const matchBets = await this.find({
       where: {
         matchId: matchId,
-        betType: betType,
+        betScoreTeam1:betScoreTeam1,
+        betScoreTeam2:betScoreTeam2,
       },
     })
     const totalCoinsOnMatchAndBetType = matchBets.reduce((sum, bet) => sum + bet.coins, 0)

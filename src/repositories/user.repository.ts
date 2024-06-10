@@ -14,15 +14,12 @@ export class UserRepository extends DefaultCrudRepository<
 
   public readonly todos: HasManyRepositoryFactory<Todo, typeof User.prototype.id>;
 
-  public readonly bets: HasManyRepositoryFactory<Bet, typeof User.prototype.id>;
 
   constructor(
     @inject('datasources.db') dataSource: DbDataSource,
     @repository.getter('TodoRepository') protected todoRepositoryGetter: Getter<TodoRepository>, @repository.getter('BetRepository') protected betRepositoryGetter: Getter<BetRepository>,
   ) {
     super(User, dataSource);
-    this.bets = this.createHasManyRepositoryFactoryFor('bets', betRepositoryGetter,);
-    this.registerInclusionResolver('bets', this.bets.inclusionResolver);
     this.todos = this.createHasManyRepositoryFactoryFor('todos', todoRepositoryGetter,);
     this.registerInclusionResolver('todos', this.todos.inclusionResolver);
   }
